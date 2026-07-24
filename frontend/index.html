@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Major Messenger</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Экран авторизации -->
+    <div id="auth-screen" class="screen active">
+        <div class="auth-container">
+            <h1>🚀 Major Messenger</h1>
+            
+            <div id="login-form" class="auth-form">
+                <h2>Вход</h2>
+                <input type="text" id="login-username" placeholder="Username">
+                <input type="password" id="login-password" placeholder="Пароль">
+                <button onclick="login()">Войти</button>
+                <p>Нет аккаунта? <a onclick="showRegister()">Зарегистрироваться</a></p>
+            </div>
+            
+            <div id="register-form" class="auth-form hidden">
+                <h2>Регистрация</h2>
+                <input type="text" id="reg-username" placeholder="Username">
+                <input type="email" id="reg-email" placeholder="Email">
+                <input type="password" id="reg-password" placeholder="Пароль">
+                <button onclick="register()">Зарегистрироваться</button>
+                <p>Уже есть аккаунт? <a onclick="showLogin()">Войти</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Главный экран -->
+    <div id="main-screen" class="screen">
+        <div class="app-container">
+            <!-- Боковая панель -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <span id="current-username"></span>
+                    <button onclick="logout()">🚪</button>
+                </div>
+                
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('friends')">👥 Друзья</button>
+                    <button class="tab-btn" onclick="switchTab('requests')">📩 Заявки</button>
+                    <button class="tab-btn" onclick="switchTab('add')">➕ Добавить</button>
+                </div>
+                
+                <div id="friends-tab" class="tab-content active">
+                    <div id="friends-list"></div>
+                </div>
+                
+                <div id="requests-tab" class="tab-content">
+                    <div id="requests-list"></div>
+                </div>
+                
+                <div id="add-tab" class="tab-content">
+                    <input type="text" id="add-friend-username" placeholder="Введите username">
+                    <button onclick="sendFriendRequest()">Отправить заявку</button>
+                </div>
+
+                <div class="group-call-section">
+                    <button onclick="createGroupCall()">📞 Создать групповой звонок</button>
+                    <input type="text" id="join-room-id" placeholder="ID комнаты">
+                    <button onclick="joinGroupCallById()">Присоединиться</button>
+                </div>
+            </div>
+
+            <!-- Чат -->
+            <div class="chat-area">
+                <div id="no-chat-selected" class="no-chat">
+                    <p>Выберите друга для начала общения</p>
+                </div>
+                
+                <div id="chat-container" class="hidden">
+                    <div class="chat-header">
+                        <span id="chat-friend-name"></span>
+                        <div class="call-buttons">
+                            <button onclick="startCall('audio')">📞</button>
+                            <button onclick="startCall('video')">📹</button>
+                        </div>
+                    </div>
+                    
+                    <div id="messages-container"></div>
+                    
+                    <div class="message-input-area">
+                        <input type="file" id="file-input" style="display:none" onchange="handleFileUpload(event)">
+                        <button onclick="document.getElementById('file-input').click()">📎</button>
+                        <input type="text" id="message-input" placeholder="Написать сообщение..." onkeypress="handleKeyPress(event)">
+                        <button onclick="sendMessage()">➤</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Экран звонка -->
+    <div id="call-screen" class="screen">
+        <div class="call-container">
+            <div id="call-status">Звонок...</div>
+            <div id="videos-container">
+                <video id="local-video" autoplay muted playsinline></video>
+                <div id="remote-videos"></div>
+            </div>
+            <div class="call-controls">
+                <button onclick="toggleMute()">🎤</button>
+                <button onclick="toggleVideo()">📹</button>
+                <button onclick="endCall()" class="end-call">📵</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Входящий звонок -->
+    <div id="incoming-call-modal" class="modal hidden">
+        <div class="modal-content">
+            <p id="incoming-call-text">Входящий звонок от...</p>
+            <button onclick="acceptCall()">✅ Принять</button>
+            <button onclick="rejectCall()">❌ Отклонить</button>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+    <script src="/static/webrtc.js"></script>
+</body>
+</html>
